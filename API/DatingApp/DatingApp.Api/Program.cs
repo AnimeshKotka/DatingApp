@@ -1,15 +1,12 @@
 global using DatingApp.Api.Data;
 global using Microsoft.EntityFrameworkCore;
-using DatingApp.Api.Interfaces;
-using DatingApp.Api.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using DatingApp.Api.Extentions;
 
 var builder = WebApplication.CreateBuilder(args);
-ConfigurationManager configuration = builder.Configuration;
+
 // Add services to the container.
 
+builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -18,22 +15,7 @@ builder.Services.AddCors(options => options.AddPolicy(name: "DatingApp", policy 
 {
     policy.WithOrigins("https://localhost:4200").AllowAnyMethod().AllowAnyHeader();
 }));
-builder.Services.AddScoped<ITokenServiceInterface, TokenService>();
-builder.Services.AddDbContext<DataContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options => {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"])),
-            ValidateIssuer = false,
-            ValidateAudience = false
-    };
-    });
-
+builder.Services.AddIdentityServices(builder.Configuration);
 
 var app = builder.Build();
 

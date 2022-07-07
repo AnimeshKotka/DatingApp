@@ -7,7 +7,7 @@ using System.Text;
 
 namespace DatingApp.Api.Controllers
 {
-    public class AccountController: BaseApiController
+    public class AccountController : BaseApiController
     {
         private readonly DataContext _context;
         private readonly ITokenServiceInterface _tokenService;
@@ -19,11 +19,12 @@ namespace DatingApp.Api.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto) {
+        public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
+        {
 
             if (await UsersExists(registerDto.Username))
             {
-                return BadRequest("User Name exists"); 
+                return BadRequest("User Name exists");
             }
 
             using var hmc = new HMACSHA512();
@@ -33,19 +34,19 @@ namespace DatingApp.Api.Controllers
                 PasswordHash = hmc.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
                 PasswordSalt = hmc.Key
             };
-            _context.Users.Add(user);  
-            await _context.SaveChangesAsync();  
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
             return new UserDto
             {
                 UserName = user.UserName,
                 Token = _tokenService.CreateToken(user)
-            };    
+            };
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == loginDto.Username);
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == loginDto.Username);//to get first one data
             if (user == null)
             {
                 return Unauthorized("Invalid User Name ");
@@ -55,15 +56,21 @@ namespace DatingApp.Api.Controllers
 
             var computedPassword = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
 
-            if(user.PasswordHash.LongLength != computedPassword.LongLength) return Unauthorized("Invalid Password");
+            if (user.PasswordHash.LongLength != computedPassword.LongLength) return Unauthorized("Invalid Password");
 
-            for (int i = 0; i < computedPassword.Length; i++)
+            if (!computedPassword.SequenceEqual(user.PasswordHash))
             {
-                if(computedPassword[i] != user.PasswordHash[i])
-                {
-                    return Unauthorized("Invalid Password");
-                }
+                return Unauthorized("Invalid Password");
             }
+
+
+            //for (int i = 0; i < computedPassword.Length; i++)
+            //{
+            //    if (computedPassword[i] != user.PasswordHash[i])
+            //    {
+
+            //    }
+            //}
 
             return new UserDto
             {
@@ -74,7 +81,7 @@ namespace DatingApp.Api.Controllers
 
         private async Task<bool> UsersExists(string userName)
         {
-             return await _context.Users.AnyAsync(x=> x.UserName.ToLower() == userName.ToLower());
+            return await _context.Users.AnyAsync(x => x.UserName.ToLower() == userName.ToLower());
 
         }
     }
