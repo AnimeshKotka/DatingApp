@@ -28,16 +28,21 @@ namespace DatingApp.Api.Services
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddDays(7),
+                Expires = DateTime.UtcNow.AddDays(1),
                 SigningCredentials = creds
             };
 
             var handler = new JwtSecurityTokenHandler();
 
-            var token = handler.CreateToken(tokenDescriptor);
+            var token = handler.CreateToken(tokenDescriptor);   
 
             return handler.WriteToken(token);
 
+        }
+
+        public string GetExpiresIn()
+        {
+            return "";
         }
     }
 }

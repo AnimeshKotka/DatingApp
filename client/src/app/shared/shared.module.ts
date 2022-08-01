@@ -2,9 +2,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { NotFoundComponent } from './components/not-found/not-found.component';
+import { ServerErrorComponent } from './components/server-error/server-error.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    NotFoundComponent,
+    ServerErrorComponent
+  ],
   imports: [
     CommonModule,
     BsDropdownModule.forRoot(),
@@ -13,6 +18,8 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
     }), // ToastrModule added
   ],
   exports: [
+    ServerErrorComponent,
+    NotFoundComponent,
     BsDropdownModule,
     ToastrModule,
   ]

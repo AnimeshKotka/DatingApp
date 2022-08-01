@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import HelperUtils from './Common/utils/helper-utils';
 import { UserModel } from './models';
 import { AccountService } from './services';
 
@@ -19,6 +20,12 @@ export class AppComponent implements OnInit {
 
   setCurrentUser() {
     const user: UserModel = JSON.parse(localStorage.getItem('user'));
-    this.accountService.setCurrentUser(user);
+    if (HelperUtils.isTokenValid(user)) {
+      this.accountService.setCurrentUser(user);
+
+      this.accountService.autoLogout(user.expiryIn - HelperUtils.getExpiryDate(user));
+    } else {
+      this.accountService.logout();
+    }
   }
 }
