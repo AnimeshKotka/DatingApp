@@ -1,6 +1,4 @@
 ﻿using DatingApp.Api.Entities;
-using DatingApp.Api.Extentions;
-using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.Api.Data
 {

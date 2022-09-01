@@ -2,7 +2,6 @@ global using DatingApp.Api.Data;
 global using Microsoft.EntityFrameworkCore;
 using DatingApp.Api.Extentions;
 using DatingApp.Api.Middleware;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 

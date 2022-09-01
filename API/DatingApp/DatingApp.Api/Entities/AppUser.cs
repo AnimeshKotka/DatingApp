@@ -20,11 +20,11 @@ namespace DatingApp.Api.Entities
 
         public string Gender { get; set; }
 
-        public string Introduction { get; set; }
+        public string Introduction { get; set; } = string.Empty;
 
-        public string LookingFor { get; set; }
+        public string LookingFor { get; set; } = string.Empty;
 
-        public string Interest { get; set; }
+        public string Interest { get; set; } = string.Empty;
 
         public string City { get; set; }
 
@@ -32,10 +32,10 @@ namespace DatingApp.Api.Entities
 
         public ICollection<Photo> Photos { get; set; }
 
-        public int getAge()
-        {
-            return DateOfBirth.CalculateAge();
-        }
+        //public int getAge()
+        //{
+        //    return DateOfBirth.CalculateAge();
+        //}
     }
 
    

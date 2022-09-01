@@ -1,4 +1,5 @@
-﻿using DatingApp.Api.DTOs;
+﻿using AutoMapper;
+using DatingApp.Api.DTOs;
 using DatingApp.Api.Entities;
 using DatingApp.Api.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +12,13 @@ namespace DatingApp.Api.Controllers
     {
         private readonly DataContext _context;
         private readonly ITokenServiceInterface _tokenService;
+        private readonly IMapper _mapper;
 
-        public AccountController(DataContext context, ITokenServiceInterface tokenService)
+        public AccountController(DataContext context, ITokenServiceInterface tokenService, IMapper mapper)
         {
             _context = context;
             _tokenService = tokenService;
+            _mapper = mapper;
         }
 
         [HttpPost("register")]
@@ -28,12 +31,12 @@ namespace DatingApp.Api.Controllers
             }
 
             using var hmc = new HMACSHA512();
-            var user = new AppUser
-            {
-                UserName = registerDto.Username,
-                PasswordHash = hmc.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
-                PasswordSalt = hmc.Key
-            };
+            var user = _mapper.Map<AppUser>(registerDto);
+
+            user.UserName = registerDto.Username;
+            user.PasswordHash = hmc.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));
+            user.PasswordSalt = hmc.Key;
+          
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
             return new UserDto

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { BehaviorSubject, catchError, map, Observable, ReplaySubject, tap, throwError } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import HelperUtils from '../Common/utils/helper-utils';
 import { UserModel } from '../models';
 
@@ -11,7 +12,7 @@ import { UserModel } from '../models';
 })
 export class AccountService {
 
-  private readonly baseUrl: string = "https://localhost:7195/api";
+  private readonly baseUrl: string = environment.apiUrl;
   private currentUser: ReplaySubject<UserModel> = new ReplaySubject<UserModel>(1);
   public currentUser$ = this.currentUser.asObservable();
   private clearTimer: any;

@@ -12,6 +12,7 @@ import { COMPONENTS } from './Components';
 import { AuthTokenInterceptor } from './services/auth-token-interceptor.service';
 import { HttpErrorInterceptor } from './shared/interceptors/httpError.interceptor';
 import { SharedModule } from './shared/shared.module';
+import { MemberCardComponent } from './Components/member/member-card/member-card.component';
 
 
 
@@ -20,6 +21,7 @@ import { SharedModule } from './shared/shared.module';
     AppComponent,
     ...COMMONCOMPONENTS,
     ...COMPONENTS,
+    MemberCardComponent,
   ],
   imports: [
     BrowserModule,
